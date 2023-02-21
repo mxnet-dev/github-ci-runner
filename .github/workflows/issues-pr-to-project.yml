@@ -1,0 +1,21 @@
+---
+name: Add issues and PRs to the project
+
+on:
+  issues:
+    types:
+      - opened
+
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add issue/PR to project
+    runs-on: self-hosted
+    steps:
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: https://github.com/orgs/mxnet-dev/projects/4/
+          github-token: ${{ secrets.ADDTOPROJECT_TOKEN }}
