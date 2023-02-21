@@ -1,0 +1,14 @@
+# This installs the Proposed repo, installs the latest cloud-init, reconfigures the sources, and then removes the repo
+
+  - name: Install cloud-init
+    ansible.builtin.apt:
+      name: cloud-init
+      state: present
+
+  - name: Update cloud-init sources
+    ansible.builtin.copy:
+      dest: "/etc/cloud/cloud.cfg.d/90_dpkg.cfg"
+      content: |
+        # to update this file, run dpkg-reconfigure cloud-init
+        datasource_list: [ NoCloud, OVF, VMware ]
+      mode: '0644'

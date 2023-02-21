@@ -1,0 +1,23 @@
+# This stops NTP, copies a file with the right data and restarts NTP
+
+  - name: Stop timesyncd
+    ansible.builtin.systemd:
+      name: systemd-timesyncd.service
+      state: stopped
+
+  - name: Write conf file
+    ansible.builtin.copy:
+      dest: "/etc/systemd/timesyncd.conf"
+      content: |
+        [Time]
+        NTP={{ ntp_server }}
+        FallbackNTP=time.cloudflare.com
+        RootDistanceMaxSec=5
+        PollIntervalMinSec=32
+        PollIntervalMaxSec=2048
+      mode: '0644'
+
+  - name: Start timesyncd
+    ansible.builtin.systemd:
+      name: systemd-timesyncd.service
+      state: started

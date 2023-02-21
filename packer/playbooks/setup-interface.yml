@@ -1,0 +1,73 @@
+# This installs and configures ZShell.  Templates for .p10k.zsh, .zshrc and oh-my-zsh.sh are MANDATORY.
+
+  - name: OhMyZsh folder exists check
+    ansible.builtin.stat:
+      path: /home/{{ mainuser.name }}/.oh-my-zsh
+    register: ohmyzsh_folder
+
+  - name: Install ZShell
+    ansible.builtin.package:
+      update_cache: true
+      name:
+        - zsh
+        - git
+        - wget
+      state: present
+
+  - name: Download OhMyZsh
+    ansible.builtin.get_url:
+      url: https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+      dest: /tmp/zsh-installer.sh
+      mode: "0555"
+    when: not ohmyzsh_folder.stat.exists
+
+  - name: Execute OhMyZsh Script
+    ansible.builtin.command: /tmp/zsh-installer.sh --unattended
+    when: not ohmyzsh_folder.stat.exists
+    changed_when: ohmyzsh_folder.stat.exists
+
+  - name: Copy Oh My Zsh folder to {{ mainuser.name }}
+    ansible.builtin.copy:
+      remote_src: true
+      src: /root/.oh-my-zsh
+      dest: /home/{{ mainuser.name }}/
+      owner: "{{ mainuser.name }}"
+      mode: '0755'
+      directory_mode: '0755'
+
+  - name: Remove OhMyZsh Script
+    ansible.builtin.file:
+      path: /tmp/zsh-installer.sh
+      state: absent
+
+  - name: Clone zsh Autosuggestions
+    ansible.builtin.git:
+      repo: https://github.com/zsh-users/zsh-autosuggestions # noqa: latest
+      dest: /home/{{ mainuser.name }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+
+  - name: Clone zsh SyntaxHighlighting
+    ansible.builtin.git:
+      repo: https://github.com/zsh-users/zsh-syntax-highlighting.git # noqa: latest
+      dest: /home/{{ mainuser.name }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+  - name: Clone zsh Powerlevel10k
+    ansible.builtin.git:
+      repo: https://github.com/romkatv/powerlevel10k.git # noqa: latest
+      dest: /home/{{ mainuser.name }}/.oh-my-zsh/themes/powerlevel10k
+
+  - name: Copy p10k config file
+    ansible.builtin.copy:
+      src: ./templates/.p10k.zsh
+      dest: /home/{{ mainuser.name }}/.p10k.zsh
+      mode: '0644'
+
+  - name: Copy zshrc config file
+    ansible.builtin.copy:
+      src: ./templates/.zshrc
+      dest: /home/{{ mainuser.name }}/.zshrc
+      mode: '0644'
+
+  - name: Set zsh as default shell
+    ansible.builtin.user:
+      name: "{{ mainuser.name }}"
+      shell: /bin/zsh

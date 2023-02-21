@@ -1,0 +1,19 @@
+# This installs the latest stable version of Ansible
+
+- name: Install prerequisites
+  ansible.builtin.apt:
+    pkg:
+    - software-properties-common
+    state: present
+
+- name: Add Ansible ppa repo
+  ansible.builtin.apt_repository:
+    mode: "0644"
+    repo: ppa:ansible/ansible
+    update_cache: true
+
+- name: Install Ansible
+  ansible.builtin.apt:
+    pkg:
+    - ansible
+    state: present
