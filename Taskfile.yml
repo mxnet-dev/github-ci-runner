@@ -1,0 +1,89 @@
+version: '3'
+
+tasks:
+
+  decrypt:
+    cmds:
+      - task: decrypt-packer
+      - task: decrypt-packer-ansible
+      - task: decrypt-terraform
+      - task: decrypt-github-ansible
+
+  template:
+    dir: ./packer
+    deps: [decrypt]
+    cmds:
+      - packer build .
+
+  terraform:
+    aliases: [vm]
+    dir: ./terraform
+    deps: [decrypt]
+    cmds:
+      - terraform apply --auto-approve
+
+  destroy:
+    dir: ./terraform
+    deps: [decrypt]
+    cmds:
+      - terraform destroy --auto-approve
+
+  deploy:
+    dir: ./ansible/
+    deps: [decrypt]
+    cmds:
+      - ansible-playbook -i inventory deploy.yml
+
+  remove:
+    dir: ./ansible/
+    deps: [decrypt]
+    cmds:
+      - ansible-playbook -i inventory remove.yml
+
+  ops-deploy:
+    cmds:
+      - task: terraform
+      - task: deploy
+
+  ops-remove:
+    cmds:
+      - task: remove
+      - task: destroy
+
+
+#------------------------------------
+# Internal tasks
+
+  decrypt-packer:
+    cmds:
+      - op inject -i ./packer/packer.auto.pkrvars.hcl.tpl -o ./packer/packer.auto.pkrvars.hcl
+    status:
+      - test -f ./packer/packer.auto.pkrvars.hcl
+    internal: true
+    silent: true
+
+  decrypt-packer-ansible:
+    cmds:
+      - op inject -i ./packer/playbooks/vars.yml.tpl -o ./packer/playbooks/vars.yml
+    status:
+      - test -f ./packer/playbooks/vars.yml
+    internal: true
+    silent: true
+
+  decrypt-terraform:
+    cmds:
+      - op inject -i ./terraform/runner.auto.tfvars.tpl -o ./terraform/runner.auto.tfvars
+    status:
+      - test -f ./terraform/runner.auto.tfvars
+    internal: true
+    silent: true
+
+  decrypt-github-ansible:
+    cmds:
+      - op inject -i ./ansible/deploy.yml.tpl -o ./ansible/deploy.yml
+      - op inject -i ./ansible/remove.yml.tpl -o ./ansible/remove.yml
+    status:
+      - test -f ./ansible/remove.yml
+      - test -f ./ansible/deploy.yml
+    internal: true
+    silent: true
