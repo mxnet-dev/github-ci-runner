@@ -1,0 +1,14 @@
+#cloud-config
+
+ssh_pwauth: false
+disable_root: true
+
+packages:
+  - nfs-common
+  - unzip
+  - nodejs
+
+runcmd:
+  - 'groupadd docker'
+  - 'usermod -aG docker ${docker_user}'
+  - 'service docker restart'
