@@ -1,0 +1,25 @@
+# This installs the latest stable version of Docker
+
+- name: Add Docker GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repo
+  ansible.builtin.apt_repository:
+    mode: "0644"
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ubuntu_version }} stable"
+    update_cache: true
+
+- name: Install Docker packages
+  ansible.builtin.apt:
+    pkg:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    state: present
+
+- name: Enable Docker service
+  ansible.builtin.service:
+    name: docker
+    enabled: true

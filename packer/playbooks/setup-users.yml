@@ -1,0 +1,19 @@
+# This adds users and sets up SSH
+
+  - name: Add main user
+    ansible.builtin.user:
+      name: "{{ mainuser.name }}"
+      groups: "{{ mainuser.groups }}"
+      password: "{{ mainuser.password }}"
+
+  - name: Create SSH directory
+    ansible.builtin.file:
+      path: "/home/{{ mainuser.name }}/.ssh"
+      state: directory
+      mode: '0700'
+
+  - name: Add SSH keys from GitHub to main user
+    ansible.builtin.get_url:
+      url: https://github.com/{{ mainuser.github_username }}.keys
+      dest: "/home/{{ mainuser.name }}/.ssh/authorized_keys"
+      mode: '0644'

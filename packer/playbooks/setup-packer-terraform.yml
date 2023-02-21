@@ -1,0 +1,19 @@
+# This installs Packer and Terraform
+
+- name: Add Hashicorp GPG key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: Add Hashicorp repo
+  ansible.builtin.apt_repository:
+    mode: "0644"
+    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ubuntu_version }} main"
+    update_cache: true
+
+- name: Install Packer/Terraform
+  ansible.builtin.apt:
+    pkg:
+    - packer
+    - terraform
+    state: present
