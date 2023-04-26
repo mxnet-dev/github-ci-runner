@@ -7,7 +7,7 @@
   "assignees": ["thehedgefrog"],
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor","patch"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
     {
@@ -19,14 +19,13 @@
       "labels": ["terraform"]
     },
     {
-      "matchManagers": ["custom-ubuntu"],
+      "matchPaths": ["^packer/sources\\.packer\\.hcl$"],
       "labels": ["packer"]
     }
   ],
-  "managers": [
+  "regexManagers": [
     {
-      "name": "custom-ubuntu",
-      "fileMatch": ["^path/to/your/packer/file\\.hcl$"],
+      "fileMatch": ["^packer/sources\\.packer\\.hcl$"],
       "matchStrings": [
         "iso_url\\\\s*=\\\\s*\"https://releases\\\\.ubuntu\\\\.com/jammy/ubuntu-(?<currentVersion>\\d+\\.\\d+\\.\\d+)-live-server-amd64\\.iso\""
       ],
