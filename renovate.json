@@ -28,7 +28,7 @@
       "name": "custom-ubuntu",
       "fileMatch": ["^path/to/your/packer/file\\.hcl$"],
       "matchStrings": [
-        `iso_url\\s*=\\s*"https://releases\\.ubuntu\\.com/jammy/ubuntu-(?<currentVersion>\\d+\\.\\d+\\.\\d+)-live-server-amd64\\.iso"`
+        "iso_url\\\\s*=\\\\s*\"https://releases\\\\.ubuntu\\\\.com/jammy/ubuntu-(?<currentVersion>\\d+\\.\\d+\\.\\d+)-live-server-amd64\\.iso\""
       ],
       "datasourceTemplate": "github-tags",
       "versioningTemplate": "semver",
