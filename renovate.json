@@ -9,6 +9,33 @@
     {
       "matchUpdateTypes": ["minor","patch"],
       "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "labels": ["actions"]
+    },
+    {
+      "matchManagers": ["terraform"],
+      "labels": ["terraform"]
+    },
+    {
+      "matchManagers": ["custom-ubuntu"],
+      "labels": ["packer"]
+    }
+  ],
+  "managers": [
+    {
+      "name": "custom-ubuntu",
+      "fileMatch": ["^path/to/your/packer/file\\.hcl$"],
+      "matchStrings": [
+        `iso_url\\s*=\\s*"https://releases\\.ubuntu\\.com/jammy/ubuntu-(?<currentVersion>\\d+\\.\\d+\\.\\d+)-live-server-amd64\\.iso"`
+      ],
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "semver",
+      "depNameTemplate": "ubuntu-releases",
+      "datasourceTemplateConfig": {
+        "repository": "canonical/ubuntu-release-tracker"
+      }
     }
   ]
 }
