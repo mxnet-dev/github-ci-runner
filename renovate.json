@@ -17,24 +17,6 @@
     {
       "matchManagers": ["terraform"],
       "labels": ["terraform"]
-    },
-    {
-      "matchPaths": ["^packer/sources\\.packer\\.hcl$"],
-      "labels": ["packer"]
-    }
-  ],
-  "regexManagers": [
-    {
-      "fileMatch": ["^packer/sources\\.packer\\.hcl$"],
-      "matchStrings": [
-        "iso_url\\\\s*=\\\\s*\"https://releases\\\\.ubuntu\\\\.com/jammy/ubuntu-(?<currentVersion>\\d+\\.\\d+\\.\\d+)-live-server-amd64\\.iso\""
-      ],
-      "datasourceTemplate": "github-tags",
-      "versioningTemplate": "semver",
-      "depNameTemplate": "ubuntu-releases",
-      "datasourceTemplateOptions": {
-        "repository": "canonical/ubuntu-release-tracker"
-      }
     }
   ]
 }
