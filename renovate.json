@@ -32,7 +32,7 @@
       "datasourceTemplate": "github-tags",
       "versioningTemplate": "semver",
       "depNameTemplate": "ubuntu-releases",
-      "datasourceTemplateConfig": {
+      "datasourceTemplateOptions": {
         "repository": "canonical/ubuntu-release-tracker"
       }
     }
