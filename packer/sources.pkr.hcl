@@ -37,7 +37,7 @@ source "vsphere-iso" "ubuntu-2204lts" {
     network_card = var.vm_network_card
   }
 
-  iso_url        = "https://releases.ubuntu.com/jammy/ubuntu-22.04.1-live-server-amd64.iso"
+  iso_url        = "https://releases.ubuntu.com/22.04/ubuntu-22.04.2-live-server-amd64.iso"
   iso_checksum   = "file:http://releases.ubuntu.com/22.04/SHA256SUMS"
   http_directory = "${var.http_directory}"
   boot_order     = "disk,cdrom"
