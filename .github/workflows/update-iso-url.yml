@@ -3,6 +3,7 @@ name: Update Ubuntu ISO URL
 on:
   schedule:
     - cron: '0 2 * * *' # Run this action once a day
+  workflow_dispatch:
 
 jobs:
   update-iso-url:
