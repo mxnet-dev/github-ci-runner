@@ -48,8 +48,10 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'feat: update Ubuntu ISO URL'
-          title: 'feat: update Ubuntu ISO URL'
+          commit-message: 'feat: update ubuntu iso url'
+          title: 'feat: update ubuntu iso url'
+          body: 'Update Ubuntu 22.04 ISO URL following release for Packer to function correctly.'
+          branch: 'update-iso-url'
           labels: 'auto-update,packer'
           assignees: 'thehedgefrog'
           reviewers: 'thehedgefrog'
