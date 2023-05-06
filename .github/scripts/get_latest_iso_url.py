@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 
 URL = 'https://releases.ubuntu.com/22.04/'
 
@@ -10,4 +11,5 @@ iso_links = [link.get('href') for link in soup.find_all('a') if link.get('href',
 
 latest_iso_url = URL + sorted(iso_links)[-1]
 
-print(f"::set-output name=latest_iso_url::{latest_iso_url}")
+with open(os.getenv('GITHUB_OUTPUT'), 'w') as output_file:
+    output_file.write(f"latest_iso_url={latest_iso_url}\n")

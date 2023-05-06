@@ -25,13 +25,21 @@ jobs:
           pip install requests beautifulsoup4
 
       - name: Get latest Ubuntu 22.04 ISO URL
-        id: get-latest-url
         run: |
           python .github/scripts/get_latest_iso_url.py
+        env:
+          GITHUB_OUTPUT: latest_iso_url
 
       - name: Update Packer configuration
         run: |
-          sed -i "s|iso_url[[:space:]]*=[[:space:]]*\"[^\"]*\"|iso_url = \"${{ steps.get-latest-url.outputs.latest_iso_url }}\"|" packer/sources.pkr.hcl
+          while IFS= read -r line
+          do
+            if [[ "$line" == *ubuntu-22.04.* ]]
+            then
+              iso_url=$(echo "$line" | awk -F\" '{print $2}')
+              sed -i "s|$iso_url|$(cat $GITHUB_OUTPUT | cut -d= -f2)|" packer/sources.pkr.hcl
+            fi
+          done < <(grep "iso_url" packer/sources.pkr.hcl)
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
