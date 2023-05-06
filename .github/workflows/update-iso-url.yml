@@ -25,6 +25,7 @@ jobs:
           pip install requests beautifulsoup4
 
       - name: Get latest Ubuntu 22.04 ISO URL
+        id: get_url
         run: |
           python .github/scripts/get_latest_iso_url.py
         env:
@@ -32,14 +33,12 @@ jobs:
 
       - name: Update Packer configuration
         run: |
-          echo "GITHUB_OUTPUT: $GITHUB_OUTPUT"
-          cat $GITHUB_OUTPUT
+          latest_iso_url=${{ steps.get_url.outputs.latest_iso_url }}
           while IFS= read -r line
           do
             if [[ "$line" == *ubuntu-22.04.* ]]
             then
               iso_url=$(echo "$line" | awk -F\" '{print $2}')
-              latest_iso_url=$(grep latest_iso_url $GITHUB_OUTPUT | cut -d= -f2)
               echo "iso_url: $iso_url, latest_iso_url: $latest_iso_url"
               sed -i "s|$iso_url|$latest_iso_url|" packer/sources.pkr.hcl
             fi
