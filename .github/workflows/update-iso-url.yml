@@ -49,6 +49,5 @@ jobs:
           commit-message: 'feat: update Ubuntu ISO URL'
           title: 'feat: update Ubuntu ISO URL'
           labels: 'auto-update,packer'
-          branch-suffix: timestamp
           assignees: 'thehedgefrog'
           reviewers: 'thehedgefrog'
