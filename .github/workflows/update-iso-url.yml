@@ -1,0 +1,44 @@
+name: Update Ubuntu ISO URL
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run this action once a day
+
+jobs:
+  update-iso-url:
+    name: Update ISO URL
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Get latest Ubuntu 22.04 ISO URL
+        id: get-latest-url
+        run: |
+          python .github/scripts/get_latest_iso_url.py
+
+      - name: Update Packer configuration
+        run: |
+          sed -i "s|iso_url[[:space:]]*=[[:space:]]*\"[^\"]*\"|iso_url = \"${{ steps.get-latest-url.outputs.latest_iso_url }}\"|" packer/sources.pkr.hcl
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'feat: update Ubuntu ISO URL'
+          title: 'feat: update Ubuntu ISO URL'
+          labels: 'auto-update,packer'
+          branch-suffix: timestamp
+          assignees: 'thehedgefrog'
+          reviewers: 'thehedgefrog'
