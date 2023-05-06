@@ -37,7 +37,8 @@ jobs:
             if [[ "$line" == *ubuntu-22.04.* ]]
             then
               iso_url=$(echo "$line" | awk -F\" '{print $2}')
-              sed -i "s|$iso_url|$(cat $GITHUB_OUTPUT | cut -d= -f2)|" packer/sources.pkr.hcl
+              latest_iso_url=$(cat $GITHUB_OUTPUT | grep latest_iso_url | cut -d= -f2)
+              sed -i "s|$iso_url|$latest_iso_url|" packer/sources.pkr.hcl
             fi
           done < <(grep "iso_url" packer/sources.pkr.hcl)
 
