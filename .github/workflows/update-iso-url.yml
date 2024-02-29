@@ -45,7 +45,7 @@ jobs:
           done < <(grep "iso_url" packer/sources.pkr.hcl)
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'feat: update ubuntu iso url'
